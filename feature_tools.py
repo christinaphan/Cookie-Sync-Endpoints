@@ -1,5 +1,4 @@
 import json
-import os
 import re
 import pandas as pd
 import sqlite3
@@ -146,7 +145,7 @@ tracking_keywords = [
 """Check if a URL exists in inputted url_queries"""
 
 
-def urlInQuery(req_query_strs: pd.DataFrame()):
+def urlInQuery(req_query_strs: pd.DataFrame):
     url_check = []
     for query in req_query_strs:
         if query != None:
@@ -195,7 +194,7 @@ def getTopLevelUrl(site_urls: list[tuple], header: list[tuple]):
 
 
 # - - - Feature extraction functions
-def urlStringLength(urls: pd.DataFrame()):
+def urlStringLength(urls: pd.DataFrame):
     url_str_lens = []
     for url in urls:
         resource = urlparse(url)
@@ -203,7 +202,7 @@ def urlStringLength(urls: pd.DataFrame()):
     return url_str_lens
 
 
-def getQueryStrings(urls: pd.DataFrame()):
+def getQueryStrings(urls: pd.DataFrame):
     query_strs = []
     for url in urls:
         resource = urlparse(url)
@@ -211,7 +210,7 @@ def getQueryStrings(urls: pd.DataFrame()):
     return query_strs
 
 
-def getQueryStringLengths(queries: pd.DataFrame()):
+def getQueryStringLengths(queries: pd.DataFrame):
     query_lengths = []
     for query in queries:
         if query != None:
@@ -221,14 +220,14 @@ def getQueryStringLengths(queries: pd.DataFrame()):
     return query_lengths
 
 
-def requestHeadersNumber(headers: pd.DataFrame()):
+def requestHeadersNumber(headers: pd.DataFrame):
     request_header_count = []
     for header in headers:
         request_header_count.append(header.count("[") - 1)
     return request_header_count
 
 
-def semicolonInQuery(query_strs: pd.DataFrame()):
+def semicolonInQuery(query_strs: pd.DataFrame):
     semicolon_query_check = []
     for (i, query) in query_strs.items():
         if query != None:
@@ -241,7 +240,7 @@ def semicolonInQuery(query_strs: pd.DataFrame()):
     return semicolon_query_check
 
 
-def numberOfQueryCookies(query_strs: pd.DataFrame()):
+def numberOfQueryCookies(query_strs: pd.DataFrame):
     query_cookie_count = []
     for query in query_strs:
         cookie_count = []
@@ -252,7 +251,7 @@ def numberOfQueryCookies(query_strs: pd.DataFrame()):
     return query_cookie_count
 
 
-def urlContainsUUID(urls: pd.DataFrame()):
+def urlContainsUUID(urls: pd.DataFrame):
     uuid_check = []
     for url in urls:
         if "uid" in url[1] or "UID" in url[1] or "uuid" in url[1] or "UUID" in url[1]:
@@ -268,7 +267,7 @@ def urlContainsUUID(urls: pd.DataFrame()):
     return uuid_check
 
 
-def trackingKeywordsInUrl(urls: pd.DataFrame()):
+def trackingKeywordsInUrl(urls: pd.DataFrame):
     tracking_keyword_check = []
     for url in urls:
         keyword_found = False
@@ -282,7 +281,7 @@ def trackingKeywordsInUrl(urls: pd.DataFrame()):
     return tracking_keyword_check
 
 
-def trackingKeywordsNextToSpecialChar(urls: pd.DataFrame()):
+def trackingKeywordsNextToSpecialChar(urls: pd.DataFrame):
     keyword_char_adjacent_check = []
 
     for url in urls:
@@ -301,7 +300,7 @@ def trackingKeywordsNextToSpecialChar(urls: pd.DataFrame()):
     return keyword_char_adjacent_check
 
 
-def subdomainCheck(urls: pd.DataFrame()):
+def subdomainCheck(urls: pd.DataFrame):
     subdomain_check = []
 
     for url in urls:
@@ -313,7 +312,7 @@ def subdomainCheck(urls: pd.DataFrame()):
     return subdomain_check
 
 
-def specialCharCount(query_strs: pd.DataFrame()):
+def specialCharCount(query_strs: pd.DataFrame):
     special_char_count = []
     for (i, query) in query_strs.items():
         count = 0
@@ -326,7 +325,7 @@ def specialCharCount(query_strs: pd.DataFrame()):
     return special_char_count
 
 
-def headerContainsSameSiteNone(headers: pd.DataFrame()):
+def headerContainsSameSiteNone(headers: pd.DataFrame):
     same_site_none_check = []
 
     for header in headers:
@@ -342,7 +341,7 @@ def headerContainsSameSiteNone(headers: pd.DataFrame()):
     return same_site_none_check
 
 
-def headerContainsP3P(headers: pd.DataFrame()):
+def headerContainsP3P(headers: pd.DataFrame):
     p3p_check = []
     for header in headers:
         if "p3p" in header or "P3P" in header:
@@ -352,7 +351,7 @@ def headerContainsP3P(headers: pd.DataFrame()):
     return p3p_check
 
 
-def headerContainsETag(headers: pd.DataFrame()):
+def headerContainsETag(headers: pd.DataFrame):
     etag_check = []
     for header in headers:
         if "etag" in header or "ETag" in header or "Etag" in header or "ETAG" in header:
@@ -362,7 +361,7 @@ def headerContainsETag(headers: pd.DataFrame()):
     return etag_check
 
 
-def requestURLContainsUUID(urls: pd.DataFrame()):
+def requestURLContainsUUID(urls: pd.DataFrame):
     uuid_check = []
     for url in urls:
         if "uid" in url or "UID" in url or "uuid" in url or "UUID" in url:
@@ -403,7 +402,7 @@ referrer_keywords = [
 """Extract and return cookie_ids from a string"""
 
 
-def getCookieStrings(strings: pd.DataFrame()):
+def getCookieStrings(strings: pd.DataFrame):
     cookies = []
 
     # extract cookie_id strings
@@ -495,6 +494,10 @@ def getResponseHeaderCookies(response_headers: list[tuple]):
                     cookie_list.pop(i)
                 continue
             elif re.fullmatch(regex_3, cookie_list[i]):
+                if len(cookie_list) > 0:
+                    cookie_list.pop(i)
+                continue
+            elif re.fullmatch(regex_4, cookie_list[i]):
                 if len(cookie_list) > 0:
                     cookie_list.pop(i)
                 continue
@@ -686,7 +689,7 @@ def makeCookieObjects(
 """Returns the organization a URL belongs to, if known"""
 
 
-def findEntity(urls: pd.DataFrame()):
+def findEntity(urls: pd.DataFrame):
     entities = []
 
     for url in urls:
@@ -705,7 +708,7 @@ def findEntity(urls: pd.DataFrame()):
 """Checks if requested url is to a third party from the referrer."""
 
 
-def sharedWithThirdParty(old_req_urls: pd.DataFrame(), new_req_urls: pd.DataFrame()):
+def sharedWithThirdParty(old_req_urls: pd.DataFrame, new_req_urls: pd.DataFrame):
     shared_with_third_party = []
 
     ref_entities = old_req_urls.parallel_apply(findEntity)
@@ -787,9 +790,9 @@ def getLocationHeader(headers: pd.Series()):
 
 
 def getRedirectIDSharingEvents(
-    url_params: pd.Series(),
-    requested_urls: pd.DataFrame(),
-    headers: pd.DataFrame(),
+    url_params: pd.Series,
+    requested_urls: pd.DataFrame,
+    headers: pd.DataFrame,
     shared_with_third_party: list[int],
 ):
     # (id-looking-string, url_domain)
@@ -894,18 +897,28 @@ def incrementCSCount(req_url, endpoint_cs_count):
     return endpoint_cs_count
 
 
-"""Checks shared IDs against stored user IDs. If match --> cookie sync"""
-
-
-def getCookieSyncs(
+def get_ground_truth_labels(
     param_shared_ids: list[list[str]],
     path_shared_ids: list[list[str]],
     loc_header_shared_ids: list[list[str]],
     redirect_id_sharing_events: list[int],
-    user_cookies: list[Cookie()],
+    user_cookies: list[Cookie],
     new_req_urls_list: list[tuple],
 ):
-    cookie_syncs = []
+    """
+    labels each node with a
+       0: if no cookie sync (i.e. no id share)
+       None: if idshare, that we cannot confirm is cookie sync
+       1: if cookie sync (shared ID == some stored user ID)
+    :param param_shared_ids: TODO
+    :param path_shared_ids: TODO
+    :param loc_header_shared_ids: TODO
+    :param redirect_id_sharing_events: TODO
+    :param user_cookies: TODO
+    :param new_req_urls_list: TODO
+    :returns: list of labels corresponding to each node
+    """
+    ground_truth_labels = []
     endpoint_cs_count = {}
 
     for (
@@ -925,14 +938,14 @@ def getCookieSyncs(
             id_found = False
             for id in edge_param_id_list:
                 if idMatch(id, user_cookies):
-                    cookie_syncs.append(1)
+                    ground_truth_labels.append(1)
                     domain_cs_count = incrementCSCount(req_url, endpoint_cs_count)
                     id_found = True
                     break
             if not id_found:
                 for id in edge_path_id_list:
                     if idMatch(id, user_cookies):
-                        cookie_syncs.append(1)
+                        ground_truth_labels.append(1)
                         domain_cs_count = incrementCSCount(req_url, endpoint_cs_count)
 
                         id_found = True
@@ -940,15 +953,15 @@ def getCookieSyncs(
             if not id_found:
                 for id in edge_loc_id_list:
                     if idMatch(id, user_cookies):
-                        cookie_syncs.append(1)
+                        ground_truth_labels.append(1)
                         domain_cs_count = incrementCSCount(req_url, endpoint_cs_count)
                         id_found = True
                         break
             if not id_found:
-                cookie_syncs.append(0)
+                ground_truth_labels.append(None)
         else:
-            cookie_syncs.append(0)
-    return cookie_syncs, endpoint_cs_count
+            ground_truth_labels.append(0)
+    return ground_truth_labels, endpoint_cs_count
 
 
 # - - - end of ground truth labeling functions
@@ -1062,7 +1075,7 @@ def redirect_extraction(
         "redirects\n",
     )
 
-    cookie_syncs, endpoint_cs_count = getCookieSyncs(
+    ground_truth_labels, endpoint_cs_count = get_ground_truth_labels(
         param_shared_ids,
         path_shared_ids,
         loc_header_shared_ids,
@@ -1071,9 +1084,9 @@ def redirect_extraction(
         new_req_urls_list,
     )
     print(
-        sum(cookie_syncs),
+        sum(filter(None, ground_truth_labels)),
         "Cookie Sync events labelled out of ",
-        len(cookie_syncs),
+        len(ground_truth_labels),
         "redirects\n",
     )
 
@@ -1105,7 +1118,7 @@ def redirect_extraction(
 
     # README: to add features, add feature object to this list, and add corresponding column name to redirect_column_names list above
     redirect_id_sharing_events_df = pd.DataFrame(redirect_id_sharing_events)
-    cookie_syncs_df = pd.DataFrame(cookie_syncs)
+    ground_truth_df = pd.DataFrame(ground_truth_labels)
     data = [
         redirect_id_sharing_events_df,
         url_str_lens,
@@ -1122,7 +1135,7 @@ def redirect_extraction(
         req_query_cookies_num,
         tracking_keywords_in_url,
         query_url_check,
-        cookie_syncs_df,
+        ground_truth_df,
     ]
     redirect_features_df = pd.concat(data, axis=1, keys=redirect_column_names)
     return redirect_features_df
