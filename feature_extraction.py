@@ -2,10 +2,12 @@ import argparse
 import os
 from feature_tools import *
 
-"""Create hash of (eTLD+1, organization) to create O(1) entity lookup in findEntity()"""
 
-
-def makeEntityHash():
+def makeEntityHash() -> dict[str, str]:
+    """
+    Create hash of (eTLD+1, organization) to create O(1) entity lookup in findEntity()
+    :returns: dict where key is eTLD and value is organization
+    """
     entity_hash = {}
 
     with open("entity_map.json") as entity_json:
@@ -79,6 +81,4 @@ if __name__ == "__main__":
         print("- - - - - - - - -\n")
     df_final = pd.concat(db_df_list)
 
-    if os.path.exists("classifier_features_dataset.csv"):
-        os.remove("classifier_features_dataset.csv")
     final_csv = df_final.to_csv(path_or_buf="classifier_features_dataset.csv")
