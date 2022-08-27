@@ -12,6 +12,12 @@ from urllib.parse import urlparse
 
 entity_hash = ""
 
+with open("tracking_keywords.txt") as f:
+    tracking_keywords = [keyword for keyword in f.read().strip().split("\n")]
+
+with open("common_words.txt") as f:
+    common_words = [common_word for common_word in f.read().strip().split("\n")]
+
 
 class Cookie:
     def __init__(self, host="host_unknown", value="no_value", is_session="no_value"):
@@ -27,9 +33,6 @@ class Cookie:
     def display(self):
         print("(", self.host, ":", self.value, ")")
 
-
-with open("tracking_keywords.txt") as f:
-    tracking_keywords = [keyword for keyword in f.read().strip().split("\n")]
 
 # - - - helper functions
 
@@ -392,9 +395,6 @@ def getResponseHeaderCookies(response_headers: list[tuple]):
                 i += 1
 
     # filter IDs by common false-positive words
-    with open("common_words.txt") as f:
-        common_words = [common_word for common_word in f.read().strip().split("\n")]
-
     for cookie_list in header_cookies:
         i = 0
         while i < len(cookie_list):

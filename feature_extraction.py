@@ -1,3 +1,4 @@
+import argparse
 import os
 import sys
 from feature_tools import *
@@ -20,8 +21,62 @@ def makeEntityHash():
     return entity_hash
 
 
+def create_arguement_parser() -> argparse.ArgumentParser:
+    """
+    Creates the feature extraction arguement parser
+    :returns: a feature extraction arguement parser
+    """
+    parser = argparse.ArgumentParser(
+        prog="feature_extractor",
+        description='Script to Iterates over past crawl data databases in /crawl folder, and extracts features for each crawl by calling feature_tools.py. Outputs "classifier_features_dataset.csv" with all crawl feature data consolidated. Will override any existing file named "classifier_features_dataset.csv".',
+    )
+    to_parallelize = parser.add_mutually_exclusive_group(required=True)
+    to_parallelize.add_argument(
+        "-y",
+        "--yes_par",
+        dest="parallelize",
+        action="store_true",
+        help="Use parallelization (default: True)",
+    )
+    to_parallelize.add_argument(
+        "-n",
+        "--no_par",
+        dest="parallelize",
+        action="store_false",
+        help="Do not use parallelization",
+    )
+    parser.add_argument(
+        "--progress-bar",
+        dest="progress_bar",
+        default=True,
+        action=argparse.BooleanOptionalAction,
+        type=bool,
+        help="Whether or not to display progress bar.",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        default=1,
+        type=int,
+        help="Verbosity of logs.\n0: don't display logs\n1: display only warning logs\n2: display all logs\n(default: 1)",
+    )
+    parser.add_argument(
+        "-m",
+        "-use_memory_fs",
+        dest="use_memory_fs",
+        default=None,
+        type=bool,
+        help="Whether or not to user memory file system.\nTrue: user\nFalse: use multiprocessing data transfer (pipe) instead(default: None)",
+    )
+    return parser
+
+
 # README: Runs feature_tools.py
 if __name__ == "__main__":
+    parser = create_arguement_parser()
+    args = parser.parse_args()
+    print(args)
+    exit()
     # read in parallelization parameters
     parallelize = False
     # parallelization parameters
