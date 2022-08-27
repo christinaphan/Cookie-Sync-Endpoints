@@ -4,6 +4,7 @@ import re
 import pandas as pd
 import sqlite3
 import tldextract
+from typing import Union
 from pandarallel import pandarallel
 from urllib.parse import urlparse
 
@@ -755,7 +756,7 @@ def redirect_extraction(
     parallelize: bool,
     progress_bar: bool,
     verbose: bool,
-    use_memory_fs: bool,
+    use_memory_fs: Union[bool, None],
     entity_map: map,
 ):
     # README: only using top 100 sites + 8 case study crawls for alpha testing. Will adjust implementation to handle whole dataset when it is ready
@@ -909,7 +910,7 @@ def feature_extraction(
     parallelize: bool,
     progress_bar: bool,
     verbose: bool,
-    use_memory_fs: bool,
+    use_memory_fs: Union[bool, None],
     entity_map: map,
 ):
     redirect_features_df = redirect_extraction(
